@@ -28,6 +28,8 @@ let isConnecting = false;
 let connectionStart = null;
 let mouseX = 0;
 let mouseY = 0;
+let offsetX = 0;
+let offsetY = 0;
 
 // Canvas and Context
 const canvas = document.getElementById('circuit-canvas');
@@ -152,7 +154,7 @@ class LogicGate {
   }
 
   computeOutput() {
-    const inputValues = this.inputs.map(conn => conn.value);
+    const inputValues = this.inputs.map(inputNode => inputNode.value);
     switch (this.type) {
       case 'AND':
         this.output = inputValues.every(val => val === 1) ? 1 : 0;
@@ -278,9 +280,9 @@ canvas.addEventListener('mousedown', (e) => {
     const gateInput = getGateInputAtPosition(x, y);
     const gateOutput = getGateOutputAtPosition(x, y);
 
-    if (inputNode || gateOutput || gateInput) {
+    if (inputNode || gateOutput) {
       isConnecting = true;
-      connectionStart = { x: x, y: y, node: inputNode || gateOutput || gateInput };
+      connectionStart = { x: x, y: y, node: inputNode || gateOutput };
     }
   }
 });
@@ -352,7 +354,6 @@ function getInputAtPosition(x, y) {
     if (Math.sqrt(dx * dx + dy * dy) < 10) {
       inputNode = {
         label: label,
-        value: value,
         x: pos.x,
         y: pos.y,
       };
@@ -382,10 +383,66 @@ function getGateOutputAtPosition(x, y) {
     const dx = x - pos.x;
     const dy = y - pos.y;
     if (Math.sqrt(dx * dx + dy * dy) < 10) {
-      return { gate: gate, x: pos.x, y: pos.y, value: gate.output };
+      return { gate: gate, x: pos.x, y: pos.y };
     }
   }
   return null;
+}
+
+// Evaluate Circuit
+function evaluateCircuit() {
+  // Reset gate outputs
+  gates.forEach(gate => {
+    gate.output = null;
+  });
+
+  // Evaluate all gates
+  let success = true;
+  try {
+    gates.forEach(gate => {
+      evaluateGate(gate);
+    });
+  } catch (e) {
+    success = false;
+  }
+
+  // Assume the last gate added is the output gate
+  outputGate = gates[gates.length - 1];
+
+  // Return true if the circuit was successfully evaluated
+  return success;
+}
+
+function evaluateGate(gate) {
+  // If the gate's output is already computed, return it
+  if (gate.output !== null) {
+    return gate.output;
+  }
+
+  // Evaluate inputs
+  const inputValues = gate.inputs.map(inputNode => {
+    if (inputNode.label) {
+      // It's an input
+      const value = inputs[inputNode.label];
+      if (value === undefined) {
+        throw new Error(`Input ${inputNode.label} is undefined`);
+      }
+      return value;
+    } else if (inputNode.gate) {
+      // It's a gate output
+      return evaluateGate(inputNode.gate);
+    } else {
+      throw new Error('Invalid input node');
+    }
+  });
+
+  // Set the gate's input values
+  gate.inputs = inputValues.map(val => ({ value: val }));
+
+  // Compute the gate's output
+  gate.computeOutput();
+
+  return gate.output;
 }
 
 // Run Circuit
@@ -414,59 +471,6 @@ function runCircuit() {
   } else {
     alert('Incorrect output or incomplete circuit. Try again.');
   }
-}
-
-// Evaluate Circuit
-function evaluateCircuit() {
-  let changed = true;
-  let iterations = 0;
-  while (changed && iterations < 100) {
-    changed = false;
-    iterations++;
-    gates.forEach(gate => {
-      const inputValues = gate.inputs.map(inputNode => {
-        if (inputNode.label) {
-          // It's an input
-          return inputs[inputNode.label];
-        } else if (inputNode.gate) {
-          // It's a gate output
-          return inputNode.gate.output;
-        }
-        return 0;
-      });
-
-      if (inputValues.includes(undefined)) {
-        // Inputs not ready yet
-        return;
-      }
-
-      const previousOutput = gate.output;
-      gate.inputs = gate.inputs.map(inputNode => {
-        if (inputNode.label) {
-          return { value: inputs[inputNode.label] };
-        } else if (inputNode.gate) {
-          return { value: inputNode.gate.output };
-        }
-        return { value: 0 };
-      });
-      gate.computeOutput();
-
-      if (gate.output !== previousOutput) {
-        changed = true;
-      }
-    });
-  }
-
-  // Check for undefined outputs (circuit incomplete)
-  for (const gate of gates) {
-    if (gate.output === null) {
-      return false;
-    }
-  }
-
-  // Assume the last gate added is the output gate
-  outputGate = gates[gates.length - 1];
-  return true;
 }
 
 // Reset Game
