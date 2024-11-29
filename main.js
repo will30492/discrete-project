@@ -1,22 +1,7 @@
 // main.js
 
-// Game Data
-const levels = [
-  {
-    levelNumber: 1,
-    inputs: { A: 1, B: 0 },
-    desiredOutput: 1,
-    availableGates: ['AND', 'OR'],
-  },
-  {
-    levelNumber: 2,
-    inputs: { A: 0, B: 1 },
-    desiredOutput: 1,
-    availableGates: ['AND', 'NOT'],
-  },
-  // Add more levels as needed
-];
-
+// Global Variables
+const gateTypes = ['AND', 'OR', 'NOT', 'NAND', 'NOR', 'XOR', 'XNOR'];
 let currentLevelIndex = 0;
 let gates = [];
 let connections = [];
@@ -35,17 +20,107 @@ let offsetY = 0;
 const canvas = document.getElementById('circuit-canvas');
 const ctx = canvas.getContext('2d');
 
+// Logic Functions for Levels
+const logicFunctions = [
+  {
+    description: 'A AND B',
+    func: (inputs) => inputs['A'] & inputs['B'],
+    minLevel: 1,
+  },
+  {
+    description: 'A OR B',
+    func: (inputs) => inputs['A'] | inputs['B'],
+    minLevel: 1,
+  },
+  {
+    description: 'NOT A',
+    func: (inputs) => inputs['A'] ^ 1,
+    minLevel: 2,
+  },
+  {
+    description: 'A XOR B',
+    func: (inputs) => inputs['A'] ^ inputs['B'],
+    minLevel: 3,
+  },
+  {
+    description: 'A NAND B',
+    func: (inputs) => (inputs['A'] & inputs['B']) ^ 1,
+    minLevel: 4,
+  },
+  {
+    description: 'A NOR B',
+    func: (inputs) => (inputs['A'] | inputs['B']) ^ 1,
+    minLevel: 5,
+  },
+  {
+    description: '(A AND B) OR C',
+    func: (inputs) => (inputs['A'] & inputs['B']) | inputs['C'],
+    minLevel: 6,
+  },
+  {
+    description: 'A XNOR B',
+    func: (inputs) => (inputs['A'] ^ inputs['B']) ^ 1,
+    minLevel: 7,
+  },
+  {
+    description: '((A OR B) AND C) XOR D',
+    func: (inputs) => ((inputs['A'] | inputs['B']) & inputs['C']) ^ inputs['D'],
+    minLevel: 8,
+  },
+  // Add more functions as needed
+];
+
 // Initialize the Game
 function initGame() {
   loadLevel(currentLevelIndex);
   setupEventListeners();
 }
 
+// Generate Level Data
+function generateLevel(levelNumber) {
+  const level = {};
+  level.levelNumber = levelNumber;
+
+  // Filter functions available for the current level
+  const availableFunctions = logicFunctions.filter((f) => f.minLevel <= levelNumber);
+
+  // Select a random function
+  const funcIndex = Math.floor(Math.random() * availableFunctions.length);
+  const selectedFunction = availableFunctions[funcIndex];
+  level.description = selectedFunction.description;
+  level.desiredFunction = selectedFunction.func;
+
+  // Extract input labels from the function description
+  const inputLabels = [...new Set(selectedFunction.description.match(/[A-Z]/g))];
+
+  // Initialize inputs with random values
+  const inputsObj = {};
+  inputLabels.forEach((label) => {
+    inputsObj[label] = Math.floor(Math.random() * 2); // Random 0 or 1
+  });
+  level.inputs = inputsObj;
+
+  // Determine available gates based on the level
+  const numGatesAvailable = Math.min(2 + Math.floor(levelNumber / 2), gateTypes.length);
+  level.availableGates = gateTypes.slice(0, numGatesAvailable);
+
+  // Compute the desired output
+  level.desiredOutput = selectedFunction.func(inputsObj);
+
+  return level;
+}
+
+// Function to get the level data
+function getLevel(levelIndex) {
+  return generateLevel(levelIndex + 1);
+}
+
 // Load Level Data
 function loadLevel(levelIndex) {
-  const level = levels[levelIndex];
+  const level = getLevel(levelIndex);
   document.getElementById('level-number').innerText = level.levelNumber;
   document.getElementById('desired-output').innerText = level.desiredOutput;
+  document.getElementById('function-description').innerText = level.description || '';
 
   // Set Inputs
   inputs = level.inputs;
@@ -89,6 +164,11 @@ function renderInputs() {
 function updateInputValue(e) {
   const label = e.target.dataset.inputLabel;
   inputs[label] = e.target.checked ? 1 : 0;
+
+  // Recompute desiredOutput
+  const level = getLevel(currentLevelIndex);
+  level.desiredOutput = level.desiredFunction(inputs);
+  document.getElementById('desired-output').innerText = level.desiredOutput;
 }
 
 // Render Gate List
@@ -96,13 +176,16 @@ function renderGateList(gateTypes) {
   const gateList = document.getElementById('gate-list');
   gateList.innerHTML = '';
 
-  gateTypes.forEach(type => {
-    const gateIcon = document.createElement('img');
-    gateIcon.src = `assets/${type.toLowerCase()}_gate.png`; // Ensure you have gate images
-    gateIcon.alt = `${type} Gate`;
+  gateTypes.forEach((type) => {
+    const gateIcon = document.createElement('div');
     gateIcon.classList.add('gate-icon');
     gateIcon.draggable = true;
     gateIcon.dataset.gateType = type;
+
+    // Gate label
+    const gateLabel = document.createElement('span');
+    gateLabel.innerText = type;
+    gateIcon.appendChild(gateLabel);
 
     // Drag Start Event
     gateIcon.addEventListener('dragstart', dragStart);
@@ -154,16 +237,28 @@ class LogicGate {
   }
 
   computeOutput() {
-    const inputValues = this.inputs.map(inputNode => inputNode.value);
+    const inputValues = this.inputs.map((inputNode) => inputNode.value);
     switch (this.type) {
       case 'AND':
-        this.output = inputValues.every(val => val === 1) ? 1 : 0;
+        this.output = inputValues.every((val) => val === 1) ? 1 : 0;
         break;
       case 'OR':
-        this.output = inputValues.some(val => val === 1) ? 1 : 0;
+        this.output = inputValues.some((val) => val === 1) ? 1 : 0;
         break;
       case 'NOT':
         this.output = inputValues[0] === 1 ? 0 : 1;
+        break;
+      case 'NAND':
+        this.output = inputValues.every((val) => val === 1) ? 0 : 1;
+        break;
+      case 'NOR':
+        this.output = inputValues.some((val) => val === 1) ? 0 : 1;
+        break;
+      case 'XOR':
+        this.output = inputValues.reduce((a, b) => a ^ b, 0);
+        break;
+      case 'XNOR':
+        this.output = inputValues.reduce((a, b) => a ^ b, 0) ^ 1;
         break;
       // Add other gate types as needed
     }
@@ -199,7 +294,7 @@ class LogicGate {
 
     // Draw input circles
     ctx.fillStyle = '#000';
-    this.inputPositions.forEach(pos => {
+    this.inputPositions.forEach((pos) => {
       ctx.beginPath();
       ctx.arc(pos.x, pos.y, 5, 0, 2 * Math.PI);
       ctx.fill();
@@ -226,7 +321,7 @@ function renderCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Draw Gates
-  gates.forEach(gate => {
+  gates.forEach((gate) => {
     gate.draw(ctx);
   });
 
@@ -249,7 +344,7 @@ function renderCanvas() {
   }
 
   // Draw Connections
-  connections.forEach(conn => {
+  connections.forEach((conn) => {
     ctx.beginPath();
     ctx.moveTo(conn.from.x, conn.from.y);
     ctx.lineTo(conn.to.x, conn.to.y);
@@ -338,7 +433,7 @@ function getMousePos(e) {
 }
 
 function getGateAtPosition(x, y) {
-  return gates.find(gate => gate.isPointInside(x, y));
+  return gates.find((gate) => gate.isPointInside(x, y));
 }
 
 function getInputAtPosition(x, y) {
@@ -392,14 +487,14 @@ function getGateOutputAtPosition(x, y) {
 // Evaluate Circuit
 function evaluateCircuit() {
   // Reset gate outputs
-  gates.forEach(gate => {
+  gates.forEach((gate) => {
     gate.output = null;
   });
 
   // Evaluate all gates
   let success = true;
   try {
-    gates.forEach(gate => {
+    gates.forEach((gate) => {
       evaluateGate(gate);
     });
   } catch (e) {
@@ -420,7 +515,7 @@ function evaluateGate(gate) {
   }
 
   // Evaluate inputs
-  const inputValues = gate.inputs.map(inputNode => {
+  const inputValues = gate.inputs.map((inputNode) => {
     if (inputNode.label) {
       // It's an input
       const value = inputs[inputNode.label];
@@ -437,7 +532,7 @@ function evaluateGate(gate) {
   });
 
   // Set the gate's input values
-  gate.inputs = inputValues.map(val => ({ value: val }));
+  gate.inputs = inputValues.map((val) => ({ value: val }));
 
   // Compute the gate's output
   gate.computeOutput();
@@ -448,7 +543,7 @@ function evaluateGate(gate) {
 // Run Circuit
 function runCircuit() {
   // Reset gate outputs
-  gates.forEach(gate => {
+  gates.forEach((gate) => {
     gate.output = null;
   });
 
@@ -458,16 +553,13 @@ function runCircuit() {
   document.getElementById('current-output').innerText = finalOutput !== null ? finalOutput : 'N/A';
 
   // Check if output matches desired output
-  const desiredOutput = levels[currentLevelIndex].desiredOutput;
+  const level = getLevel(currentLevelIndex);
+  const desiredOutput = level.desiredOutput;
   if (finalOutput === desiredOutput && success) {
     alert('Congratulations! You solved the puzzle.');
     // Proceed to next level
     currentLevelIndex++;
-    if (currentLevelIndex < levels.length) {
-      loadLevel(currentLevelIndex);
-    } else {
-      alert('You have completed all levels!');
-    }
+    loadLevel(currentLevelIndex);
   } else {
     alert('Incorrect output or incomplete circuit. Try again.');
   }
