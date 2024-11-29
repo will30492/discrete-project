@@ -22,6 +22,12 @@ let gates = [];
 let connections = [];
 let inputs = {};
 let outputGate = null;
+let isDraggingGate = false;
+let selectedGate = null;
+let isConnecting = false;
+let connectionStart = null;
+let mouseX = 0;
+let mouseY = 0;
 
 // Canvas and Context
 const canvas = document.getElementById('circuit-canvas');
@@ -66,13 +72,21 @@ function renderInputs() {
     inputLabel.innerText = `${label}: `;
     inputNode.appendChild(inputLabel);
 
-    const inputValue = document.createElement('span');
-    inputValue.innerText = value;
-    inputValue.id = `input-${label}`;
-    inputNode.appendChild(inputValue);
+    const inputCheckbox = document.createElement('input');
+    inputCheckbox.type = 'checkbox';
+    inputCheckbox.checked = value === 1;
+    inputCheckbox.dataset.inputLabel = label;
+    inputCheckbox.addEventListener('change', updateInputValue);
+    inputNode.appendChild(inputCheckbox);
 
     inputsContainer.appendChild(inputNode);
   }
+}
+
+// Update Input Value
+function updateInputValue(e) {
+  const label = e.target.dataset.inputLabel;
+  inputs[label] = e.target.checked ? 1 : 0;
 }
 
 // Render Gate List
@@ -100,7 +114,7 @@ function dragStart(e) {
   e.dataTransfer.setData('text/plain', e.target.dataset.gateType);
 }
 
-// Canvas Drop Handler
+// Canvas Event Handlers
 canvas.addEventListener('dragover', (e) => {
   e.preventDefault();
 });
@@ -132,6 +146,9 @@ class LogicGate {
     this.width = 60;
     this.height = 60;
     this.isOutputGate = false;
+    this.inputPositions = [];
+    this.outputPosition = {};
+    this.updateIOPositions();
   }
 
   computeOutput() {
@@ -150,12 +167,55 @@ class LogicGate {
     }
   }
 
+  updateIOPositions() {
+    const x = this.position.x;
+    const y = this.position.y;
+    const w = this.width;
+    const h = this.height;
+
+    // Input positions
+    if (this.type === 'NOT') {
+      this.inputPositions = [{ x: x, y: y + h / 2 }];
+    } else {
+      this.inputPositions = [
+        { x: x, y: y + h / 3 },
+        { x: x, y: y + (2 * h) / 3 },
+      ];
+    }
+
+    // Output position
+    this.outputPosition = { x: x + w, y: y + h / 2 };
+  }
+
   draw(ctx) {
-    // Draw gate rectangle (simplified for demonstration)
+    // Draw gate rectangle (simplified)
     ctx.fillStyle = '#ddd';
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     ctx.fillStyle = '#000';
+    ctx.font = '16px Arial';
     ctx.fillText(this.type, this.position.x + 10, this.position.y + 35);
+
+    // Draw input circles
+    ctx.fillStyle = '#000';
+    this.inputPositions.forEach(pos => {
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, 5, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+
+    // Draw output circle
+    ctx.beginPath();
+    ctx.arc(this.outputPosition.x, this.outputPosition.y, 5, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+
+  isPointInside(x, y) {
+    return (
+      x >= this.position.x &&
+      x <= this.position.x + this.width &&
+      y >= this.position.y &&
+      y <= this.position.y + this.height
+    );
   }
 }
 
@@ -168,45 +228,181 @@ function renderCanvas() {
     gate.draw(ctx);
   });
 
-  // Draw Connections (if any)
-  // For simplicity, this example does not implement connections
+  // Draw Inputs
+  let inputIndex = 0;
+  for (const [label, value] of Object.entries(inputs)) {
+    const x = 50;
+    const y = 100 + inputIndex * 100;
+    ctx.fillStyle = '#000';
+    ctx.fillText(`${label}: ${value}`, x - 30, y + 5);
+
+    // Draw input circle
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // Store position for connections
+    inputs[label].position = { x: x, y: y };
+    inputIndex++;
+  }
+
+  // Draw Connections
+  connections.forEach(conn => {
+    ctx.beginPath();
+    ctx.moveTo(conn.from.x, conn.from.y);
+    ctx.lineTo(conn.to.x, conn.to.y);
+    ctx.strokeStyle = '#000';
+    ctx.stroke();
+  });
+
+  // If connecting, draw line
+  if (isConnecting && connectionStart) {
+    ctx.beginPath();
+    ctx.moveTo(connectionStart.x, connectionStart.y);
+    ctx.lineTo(mouseX, mouseY);
+    ctx.strokeStyle = '#f00';
+    ctx.stroke();
+  }
+}
+
+// Canvas Mouse Events
+canvas.addEventListener('mousedown', (e) => {
+  const { x, y } = getMousePos(e);
+  selectedGate = getGateAtPosition(x, y);
+  if (selectedGate) {
+    isDraggingGate = true;
+    offsetX = x - selectedGate.position.x;
+    offsetY = y - selectedGate.position.y;
+  } else {
+    const inputNode = getInputAtPosition(x, y);
+    const gateInput = getGateInputAtPosition(x, y);
+    const gateOutput = getGateOutputAtPosition(x, y);
+
+    if (inputNode || gateOutput || gateInput) {
+      isConnecting = true;
+      connectionStart = { x: x, y: y, node: inputNode || gateOutput || gateInput };
+    }
+  }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+  const { x, y } = getMousePos(e);
+  mouseX = x;
+  mouseY = y;
+
+  if (isDraggingGate && selectedGate) {
+    selectedGate.position.x = x - offsetX;
+    selectedGate.position.y = y - offsetY;
+    selectedGate.updateIOPositions();
+    renderCanvas();
+  } else if (isConnecting) {
+    renderCanvas();
+  }
+});
+
+canvas.addEventListener('mouseup', (e) => {
+  if (isDraggingGate) {
+    isDraggingGate = false;
+    selectedGate = null;
+  } else if (isConnecting) {
+    const { x, y } = getMousePos(e);
+    const gateInput = getGateInputAtPosition(x, y);
+
+    if (gateInput && connectionStart.node !== gateInput) {
+      // Create Connection
+      connections.push({
+        from: connectionStart.node,
+        to: gateInput,
+      });
+
+      // Update Gate Inputs
+      if (!gateInput.gate.inputs.includes(connectionStart.node)) {
+        gateInput.gate.inputs.push(connectionStart.node);
+      }
+    }
+    isConnecting = false;
+    connectionStart = null;
+    renderCanvas();
+  }
+});
+
+// Utility Functions
+function getMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top,
+  };
+}
+
+function getGateAtPosition(x, y) {
+  return gates.find(gate => gate.isPointInside(x, y));
+}
+
+function getInputAtPosition(x, y) {
+  let inputNode = null;
+  let inputIndex = 0;
+  for (const [label, value] of Object.entries(inputs)) {
+    const pos = {
+      x: 50,
+      y: 100 + inputIndex * 100,
+    };
+    const dx = x - pos.x;
+    const dy = y - pos.y;
+    if (Math.sqrt(dx * dx + dy * dy) < 10) {
+      inputNode = {
+        label: label,
+        value: value,
+        x: pos.x,
+        y: pos.y,
+      };
+      break;
+    }
+    inputIndex++;
+  }
+  return inputNode;
+}
+
+function getGateInputAtPosition(x, y) {
+  for (const gate of gates) {
+    for (const pos of gate.inputPositions) {
+      const dx = x - pos.x;
+      const dy = y - pos.y;
+      if (Math.sqrt(dx * dx + dy * dy) < 10) {
+        return { gate: gate, x: pos.x, y: pos.y };
+      }
+    }
+  }
+  return null;
+}
+
+function getGateOutputAtPosition(x, y) {
+  for (const gate of gates) {
+    const pos = gate.outputPosition;
+    const dx = x - pos.x;
+    const dy = y - pos.y;
+    if (Math.sqrt(dx * dx + dy * dy) < 10) {
+      return { gate: gate, x: pos.x, y: pos.y, value: gate.output };
+    }
+  }
+  return null;
 }
 
 // Run Circuit
 function runCircuit() {
-  // Simplified computation without actual connections
-  // In a complete game, you would process inputs through connected gates
-
-  if (gates.length === 0) {
-    alert('Place some gates on the workspace!');
-    return;
-  }
-
-  // For demonstration, assume the last gate is the output gate
-  outputGate = gates[gates.length - 1];
-  outputGate.isOutputGate = true;
-
-  // Assign inputs to the first gate
-  const firstGate = gates[0];
-  firstGate.inputs = Object.values(inputs).map(val => ({ value: val }));
-
-  // Compute outputs sequentially
+  // Reset gate outputs
   gates.forEach(gate => {
-    gate.computeOutput();
-    // For simplicity, set the next gate's inputs to the current gate's output
-    const nextGateIndex = gates.indexOf(gate) + 1;
-    if (gates[nextGateIndex]) {
-      gates[nextGateIndex].inputs = [{ value: gate.output }];
-    }
+    gate.output = null;
   });
 
-  // Display Output
-  const finalOutput = outputGate.output;
-  document.getElementById('current-output').innerText = finalOutput;
+  // Evaluate Circuit
+  const success = evaluateCircuit();
+  const finalOutput = outputGate ? outputGate.output : null;
+  document.getElementById('current-output').innerText = finalOutput !== null ? finalOutput : 'N/A';
 
   // Check if output matches desired output
   const desiredOutput = levels[currentLevelIndex].desiredOutput;
-  if (finalOutput === desiredOutput) {
+  if (finalOutput === desiredOutput && success) {
     alert('Congratulations! You solved the puzzle.');
     // Proceed to next level
     currentLevelIndex++;
@@ -216,8 +412,61 @@ function runCircuit() {
       alert('You have completed all levels!');
     }
   } else {
-    alert('Incorrect output. Try again.');
+    alert('Incorrect output or incomplete circuit. Try again.');
   }
+}
+
+// Evaluate Circuit
+function evaluateCircuit() {
+  let changed = true;
+  let iterations = 0;
+  while (changed && iterations < 100) {
+    changed = false;
+    iterations++;
+    gates.forEach(gate => {
+      const inputValues = gate.inputs.map(inputNode => {
+        if (inputNode.label) {
+          // It's an input
+          return inputs[inputNode.label];
+        } else if (inputNode.gate) {
+          // It's a gate output
+          return inputNode.gate.output;
+        }
+        return 0;
+      });
+
+      if (inputValues.includes(undefined)) {
+        // Inputs not ready yet
+        return;
+      }
+
+      const previousOutput = gate.output;
+      gate.inputs = gate.inputs.map(inputNode => {
+        if (inputNode.label) {
+          return { value: inputs[inputNode.label] };
+        } else if (inputNode.gate) {
+          return { value: inputNode.gate.output };
+        }
+        return { value: 0 };
+      });
+      gate.computeOutput();
+
+      if (gate.output !== previousOutput) {
+        changed = true;
+      }
+    });
+  }
+
+  // Check for undefined outputs (circuit incomplete)
+  for (const gate of gates) {
+    if (gate.output === null) {
+      return false;
+    }
+  }
+
+  // Assume the last gate added is the output gate
+  outputGate = gates[gates.length - 1];
+  return true;
 }
 
 // Reset Game
