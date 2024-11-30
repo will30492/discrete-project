@@ -1,0 +1,154 @@
+<!-- content/quiz.html -->
+<h2>Graph Theory Quizzes</h2>
+<p>Test your knowledge of graph theory topics.</p>
+
+<div id="quiz-container">
+  <div id="question"></div>
+  <div id="options"></div>
+  <button id="next-question">Next Question</button>
+  <div id="quiz-feedback"></div>
+</div>
+
+<script>
+  function initializeQuiz() {
+    const questions = [
+      {
+        question: "What is the degree of a vertex?",
+        options: [
+          "Number of vertices in the graph",
+          "Number of edges incident to the vertex",
+          "Number of cycles in the graph",
+          "The weight of the vertex",
+        ],
+        answer: 1,
+      },
+      {
+        question: "Which of the following graphs is non-planar?",
+        options: [
+          "Complete Graph K4",
+          "Complete Bipartite Graph K3,3",
+          "Cycle Graph C5",
+          "Path Graph P4",
+        ],
+        answer: 1,
+      },
+      {
+        question:
+          "What is the chromatic number of a complete graph with n vertices?",
+        options: ["n", "n-1", "2", "1"],
+        answer: 0,
+      },
+      {
+        question: "Prim's algorithm is used for:",
+        options: [
+          "Finding the shortest path between two nodes",
+          "Performing a depth-first traversal",
+          "Finding the minimum spanning tree of a graph",
+          "Detecting cycles in a graph",
+        ],
+        answer: 2,
+      },
+      {
+        question: "In a directed acyclic graph (DAG), you can perform:",
+        options: [
+          "Topological Sorting",
+          "Finding Eulerian Cycles",
+          "Detecting Negative Cycles",
+          "None of the above",
+        ],
+        answer: 0,
+      },
+      {
+        question:
+          "Which graph traversal algorithm can be used to detect cycles in an undirected graph?",
+        options: [
+          "Depth-First Search",
+          "Breadth-First Search",
+          "Dijkstra's Algorithm",
+          "Both A and B",
+        ],
+        answer: 3,
+      },
+      {
+        question: "A graph is called bipartite if:",
+        options: [
+          "It can be divided into two disjoint sets of vertices such that every edge connects a vertex from one set to the other.",
+          "It contains an even number of vertices.",
+          "It has a cycle of even length.",
+          "It is a tree.",
+        ],
+        answer: 0,
+      },
+      {
+        question: "Kruskal's algorithm is used to:",
+        options: [
+          "Find the shortest path between nodes",
+          "Perform topological sorting",
+          "Find the minimum spanning tree of a graph",
+          "Detect cycles in a graph",
+        ],
+        answer: 2,
+      },
+      {
+        question:
+          "In a weighted graph, the shortest path between two vertices is determined by:",
+        options: [
+          "The number of edges in the path",
+          "The total weight of the edges in the path",
+          "The degree of the vertices",
+          "None of the above",
+        ],
+        answer: 1,
+      },
+      {
+        question: "Which of the following is true about trees?",
+        options: [
+          "A tree is a connected graph with no cycles.",
+          "A tree is a disconnected graph with cycles.",
+          "Every connected graph is a tree.",
+          "A tree must have at least one cycle.",
+        ],
+        answer: 0,
+      },
+      {
+        question: "The number of edges in a complete graph of n vertices is:",
+        options: ["n", "n-1", "n(n-1)/2", "n(n+1)/2"],
+        answer: 2,
+      },
+    ];
+
+    let currentQuestion = 0;
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("question").textContent = q.question;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.addEventListener("click", () => checkAnswer(index));
+        optionsDiv.appendChild(button);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const q = questions[currentQuestion];
+      const feedbackDiv = document.getElementById("quiz-feedback");
+      if (selected === q.answer) {
+        feedbackDiv.textContent = "Correct!";
+      } else {
+        feedbackDiv.textContent = "Incorrect. Try again.";
+      }
+    }
+
+    document.getElementById("next-question").addEventListener("click", () => {
+      currentQuestion = (currentQuestion + 1) % questions.length;
+      loadQuestion();
+      document.getElementById("quiz-feedback").textContent = "";
+    });
+
+    loadQuestion();
+  }
+  initializeQuiz();
+</script>

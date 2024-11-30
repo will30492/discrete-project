@@ -1,0 +1,97 @@
+<!-- content/tutorial5.html -->
+<h2>Shortest Path Algorithms</h2>
+
+<p>
+  Finding the shortest path between nodes is a common problem. Algorithms like
+  Dijkstra's and Bellman-Ford solve this for different types of graphs.
+</p>
+
+<h3>Dijkstra's Algorithm</h3>
+
+<p>
+  Dijkstra's algorithm finds the shortest path from a single source vertex to
+  all other vertices in a graph with non-negative edge weights.
+</p>
+
+<h4>Algorithm Steps</h4>
+
+<ol>
+  <li>
+    Set the distance to the source node to zero and all other nodes to infinity.
+  </li>
+  <li>Mark all nodes unvisited. Set the source node as current.</li>
+  <li>
+    For the current node, consider all its unvisited neighbors and calculate
+    their tentative distances.
+  </li>
+  <li>
+    When done with current node, mark it as visited. A visited node will not be
+    checked again.
+  </li>
+  <li>
+    Select the unvisited node with the smallest tentative distance as the new
+    current node.
+  </li>
+  <li>Repeat steps 3-5 until all nodes are visited.</li>
+</ol>
+
+<h4>Interactive Dijkstra's Algorithm</h4>
+
+<p>Click the button to run Dijkstra's algorithm on a sample graph.</p>
+
+<button id="run-dijkstra">Run Dijkstra's Algorithm</button>
+<canvas id="dijkstraCanvas" width="600" height="400"></canvas>
+
+<script>
+  document.getElementById("run-dijkstra").addEventListener("click", () => {
+    // Initialize weighted graph
+    // Implement Dijkstra's algorithm with visual steps
+  });
+</script>
+
+<h3>Bellman-Ford Algorithm</h3>
+
+<p>
+  Bellman-Ford algorithm computes shortest paths from a single source vertex to
+  all other vertices in a weighted digraph, even if some edge weights are
+  negative.
+</p>
+
+<p>It can detect negative cycles and report their existence.</p>
+
+<h4>Algorithm Steps</h4>
+
+<ol>
+  <li>
+    Initialize the distance to the source to zero and all others to infinity.
+  </li>
+  <li>
+    Relax all edges \( |V| - 1 \) times:
+    <ol type="a">
+      <li>
+        For each edge \( (u, v) \), if \( distance[u] + weight(u, v) <
+        distance[v] \), update \( distance[v] \).
+      </li>
+    </ol>
+  </li>
+  <li>
+    Check for negative-weight cycles:
+    <ol type="a">
+      <li>If a further relaxation is possible, a negative cycle exists.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3>Practice Exercise</h3>
+
+<p>
+  Apply Dijkstra's algorithm to the following graph and find the shortest path
+  from vertex A to all other vertices.
+</p>
+
+<img src="assets/weighted_graph.png" alt="Dijkstra Graph" />
+
+<nav>
+  <a href="#" data-page="tutorial4">Previous: Graph Traversals</a> |
+  <a href="#" data-page="tutorial6">Next: Eulerian and Hamiltonian Paths</a>
+</nav>

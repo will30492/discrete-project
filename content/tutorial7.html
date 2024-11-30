@@ -1,0 +1,74 @@
+<!-- content/tutorial7.html -->
+<h2>Graph Coloring</h2>
+
+<p>
+  Graph coloring involves assigning colors to vertices so that no two adjacent
+  vertices share the same color. The minimum number of colors needed is called
+  the <strong>chromatic number</strong>.
+</p>
+
+<h3>Applications</h3>
+
+<ul>
+  <li>
+    <strong>Scheduling</strong>: Assigning time slots or resources without
+    conflicts.
+  </li>
+  <li>
+    <strong>Register Allocation</strong>: In compilers, assigning variables to
+    CPU registers.
+  </li>
+</ul>
+
+<h3>Coloring Algorithms</h3>
+
+<p>
+  The problem of finding the chromatic number is NP-hard. Greedy algorithms can
+  be used to find an approximate solution.
+</p>
+
+<h4>Greedy Coloring Algorithm</h4>
+
+<ol>
+  <li>Order the vertices (e.g., randomly or by degree).</li>
+  <li>
+    For each vertex:
+    <ol type="a">
+      <li>Assign the smallest color number not used by its neighbors.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3>Interactive Coloring Tool</h3>
+
+<p>Try coloring the graph below using the minimum number of colors.</p>
+
+<canvas id="coloringCanvas" width="600" height="400"></canvas>
+<div id="coloring-controls">
+  <button id="color-vertex">Color Vertex</button>
+  <select id="color-select">
+    <option value="red">Red</option>
+    <option value="green">Green</option>
+    <option value="blue">Blue</option>
+    <!-- Add more colors if needed -->
+  </select>
+</div>
+
+<script>
+  // Implement an interactive graph coloring tool
+</script>
+
+<h3>Practice Exercise</h3>
+
+<p>
+  Determine the chromatic number of the following graph and explain your
+  reasoning.
+</p>
+
+<img src="assets/practice_graph.png" alt="Graph Coloring" />
+
+<nav>
+  <a href="#" data-page="tutorial6">Previous: Eulerian and Hamiltonian Paths</a>
+  |
+  <a href="#" data-page="tutorial8">Next: Planarity and Graph Drawing</a>
+</nav>

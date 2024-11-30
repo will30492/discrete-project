@@ -1,0 +1,48 @@
+<!-- content/tutorial8.html -->
+<h2>Planarity and Graph Drawing</h2>
+
+<p>
+  A graph is <strong>planar</strong> if it can be drawn on a plane without any
+  edges crossing.
+</p>
+
+<h3>Euler's Formula</h3>
+
+<p>For any connected planar graph:</p>
+
+\[ V - E + F = 2 \]
+
+<p>Where:</p>
+
+<ul>
+  <li>\( V \) = number of vertices</li>
+  <li>\( E \) = number of edges</li>
+  <li>\( F \) = number of faces (including the outer, infinite face)</li>
+</ul>
+
+<h3>Kuratowski's Theorem</h3>
+
+<p>
+  A finite graph is planar if and only if it does not contain a subgraph that is
+  a subdivision of \( K_5 \) (complete graph of 5 vertices) or \( K_{3,3} \)
+  (complete bipartite graph of two sets of 3 vertices).
+</p>
+
+<h4>Example</h4>
+
+<img src="assets/planar_graph.png" alt="Planar Graph" />
+
+<h3>Interactive Drawing Tool</h3>
+
+<p>Try to draw the following graph without edge crossings.</p>
+
+<canvas id="planarCanvas" width="600" height="400"></canvas>
+
+<script>
+  // Implement an interactive tool for graph drawing
+</script>
+
+<nav>
+  <a href="#" data-page="tutorial7">Previous: Graph Coloring</a> |
+  <a href="#" data-page="tutorial9">Next: Advanced Topics</a>
+</nav>

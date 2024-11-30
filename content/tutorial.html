@@ -1,0 +1,35 @@
+<!-- content/tutorial.html -->
+<h2>Graph Theory Tutorials</h2>
+<p>
+  Welcome to the Graph Theory Tutorials. Below is a list of topics covered.
+  Click on any topic to start learning.
+</p>
+<ul>
+  <li><a href="#" data-page="tutorial1">1. Introduction to Graphs</a></li>
+  <li><a href="#" data-page="tutorial2">2. Types of Graphs</a></li>
+  <li><a href="#" data-page="tutorial3">3. Graph Representations</a></li>
+  <li><a href="#" data-page="tutorial4">4. Graph Traversals</a></li>
+  <li><a href="#" data-page="tutorial5">5. Shortest Path Algorithms</a></li>
+  <li>
+    <a href="#" data-page="tutorial6">6. Eulerian and Hamiltonian Paths</a>
+  </li>
+  <li><a href="#" data-page="tutorial7">7. Graph Coloring</a></li>
+  <li><a href="#" data-page="tutorial8">8. Planarity and Graph Drawing</a></li>
+  <li>
+    <a href="#" data-page="tutorial9">9. Advanced Topics in Graph Theory</a>
+  </li>
+</ul>
+<p>
+  Use the navigation menu at the top of the page to access other sections of the
+  site.
+</p>
+<script>
+  // Add event listeners to tutorial links
+  document.querySelectorAll("ul li a").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const page = link.getAttribute("data-page");
+      loadContent(page);
+    });
+  });
+</script>

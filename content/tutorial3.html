@@ -1,0 +1,153 @@
+<!-- content/tutorial3.html -->
+<h2>Graph Representations</h2>
+
+<p>
+  How we represent graphs in computer systems affects the efficiency of graph
+  algorithms. The three common representations are adjacency matrices, adjacency
+  lists, and incidence matrices.
+</p>
+
+<h3>Adjacency Matrix</h3>
+
+<p>
+  An adjacency matrix is a 2D array \( A \) of size \( n \times n \), where \( n
+  \) is the number of vertices. The element \( A[i][j] \) indicates whether
+  there is an edge from vertex \( i \) to vertex \( j \).
+</p>
+
+<p>For an undirected graph, the adjacency matrix is symmetric.</p>
+
+<h4>Example</h4>
+
+<img src="assets/adjacency_matrix.png" alt="Adjacency Matrix Example" />
+
+<h3>Adjacency List</h3>
+
+<p>
+  An adjacency list represents the graph as an array of lists. Each list \( A[i]
+  \) contains all the vertices adjacent to vertex \( i \).
+</p>
+
+<h4>Example</h4>
+
+<img src="assets/adjacency_list.png" alt="Adjacency List Example" />
+
+<h3>Incidence Matrix</h3>
+
+<p>
+  An incidence matrix is a 2D array \( I \) of size \( n \times m \), where \( n
+  \) is the number of vertices and \( m \) is the number of edges. The element
+  \( I[i][j] \) indicates whether vertex \( i \) is incident to edge \( j \).
+</p>
+
+<h4>Example</h4>
+
+<img src="assets/incidence_matrix.png" alt="Incidence Matrix Example" />
+
+<h3>Comparisons</h3>
+
+<table>
+  <tr>
+    <th>Representation</th>
+    <th>Space Complexity</th>
+    <th>Best For</th>
+  </tr>
+  <tr>
+    <td>Adjacency Matrix</td>
+    <td>\( O(n^2) \)</td>
+    <td>Dense graphs</td>
+  </tr>
+  <tr>
+    <td>Adjacency List</td>
+    <td>\( O(n + m) \)</td>
+    <td>Sparse graphs</td>
+  </tr>
+  <tr>
+    <td>Incidence Matrix</td>
+    <td>\( O(n \times m) \)</td>
+    <td>Specific applications requiring edge incidence</td>
+  </tr>
+</table>
+
+<h3>Interactive Exploration</h3>
+
+<p>Choose a representation to visualize:</p>
+
+<select id="representation-select">
+  <option value="adjacency-matrix">Adjacency Matrix</option>
+  <option value="adjacency-list">Adjacency List</option>
+  <option value="incidence-matrix">Incidence Matrix</option>
+</select>
+
+<button id="visualize-representation">Visualize</button>
+
+<div id="representation-output"></div>
+
+<script>
+  document
+    .getElementById("visualize-representation")
+    .addEventListener("click", () => {
+      const representation = document.getElementById(
+        "representation-select"
+      ).value;
+      const outputDiv = document.getElementById("representation-output");
+      outputDiv.innerHTML = ""; // Clear previous output
+
+      // Create a sample graph
+      const graph = new Graph(false);
+      const vA = new Vertex("A");
+      const vB = new Vertex("B");
+      const vC = new Vertex("C");
+      graph.addVertex(vA);
+      graph.addVertex(vB);
+      graph.addVertex(vC);
+      graph.addEdge(vA, vB);
+      graph.addEdge(vB, vC);
+
+      if (representation === "adjacency-matrix") {
+        const matrix = graph.getAdjacencyMatrix();
+        outputDiv.innerHTML =
+          "<h4>Adjacency Matrix</h4>" + matrixToHTML(matrix);
+      } else if (representation === "adjacency-list") {
+        const list = graph.getAdjacencyList();
+        outputDiv.innerHTML = "<h4>Adjacency List</h4>" + listToHTML(list);
+      } else if (representation === "incidence-matrix") {
+        const matrix = graph.getIncidenceMatrix();
+        outputDiv.innerHTML =
+          "<h4>Incidence Matrix</h4>" + matrixToHTML(matrix);
+      }
+    });
+
+  function matrixToHTML(matrix) {
+    let html = "<table>";
+    for (let row of matrix) {
+      html += "<tr>";
+      for (let cell of row) {
+        html += `<td>${cell}</td>`;
+      }
+      html += "</tr>";
+    }
+    html += "</table>";
+    return html;
+  }
+
+  function listToHTML(list) {
+    let html = "<ul>";
+    for (let [vertex, neighbors] of Object.entries(list)) {
+      html += `<li>${vertex}: [${neighbors.join(", ")}]</li>`;
+    }
+    html += "</ul>";
+    return html;
+  }
+</script>
+
+<h3>Practice Exercise</h3>
+
+<p>Convert the following graph into all three representations:</p>
+
+<img src="assets/practice_graph.png" alt="Practice Graph" />
+
+<nav>
+  <a href="#" data-page="tutorial2">Previous: Types of Graphs</a> |
+  <a href="#" data-page="tutorial4">Next: Graph Traversals</a>
+</nav>
