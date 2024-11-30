@@ -1,0 +1,95 @@
+<!-- content/tutorial4.html -->
+<h2>Graph Traversals</h2>
+
+<p>
+  Traversing a graph involves visiting all the vertices and edges
+  systematically. Two fundamental traversal algorithms are Breadth-First Search
+  (BFS) and Depth-First Search (DFS).
+</p>
+
+<h3>Breadth-First Search (BFS)</h3>
+
+<p>
+  BFS explores the graph level by level. It starts at a specified root vertex
+  and explores all its neighbors before moving to the next level of vertices.
+</p>
+
+<h4>Algorithm Steps</h4>
+
+<ol>
+  <li>Enqueue the root node and mark it as visited.</li>
+  <li>
+    While the queue is not empty:
+    <ol type="a">
+      <li>Dequeue a vertex \( v \).</li>
+      <li>
+        For each unvisited neighbor \( w \) of \( v \):
+        <ol type="i">
+          <li>Mark \( w \) as visited.</li>
+          <li>Enqueue \( w \).</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<h4>Interactive BFS Example</h4>
+
+<p>Click the button to see BFS in action.</p>
+
+<button id="start-bfs">Start BFS</button>
+<canvas id="bfsCanvas" width="600" height="400"></canvas>
+
+<script>
+  document.getElementById("start-bfs").addEventListener("click", () => {
+    // Initialize graph and draw it
+    // Implement BFS with visual steps
+  });
+</script>
+
+<h3>Depth-First Search (DFS)</h3>
+
+<p>
+  DFS explores as far as possible along each branch before backtracking. It uses
+  a stack (often via recursion) to keep track of the path.
+</p>
+
+<h4>Algorithm Steps</h4>
+
+<ol>
+  <li>Start at the root node and mark it as visited.</li>
+  <li>
+    For each unvisited neighbor \( w \) of the current vertex \( v \):
+    <ol type="a">
+      <li>Recursively perform DFS on \( w \).</li>
+    </ol>
+  </li>
+</ol>
+
+<h4>Interactive DFS Example</h4>
+
+<p>Click the button to see DFS in action.</p>
+
+<button id="start-dfs">Start DFS</button>
+<canvas id="dfsCanvas" width="600" height="400"></canvas>
+
+<script>
+  document.getElementById("start-dfs").addEventListener("click", () => {
+    // Initialize graph and draw it
+    // Implement DFS with visual steps
+  });
+</script>
+
+<h3>Practice Exercise</h3>
+
+<p>
+  Given the following graph, perform BFS and DFS starting from vertex A. List
+  the order in which the vertices are visited.
+</p>
+
+<img src="assets/practice_graph.png" alt="Traversal Graph" />
+
+<nav>
+  <a href="#" data-page="tutorial3">Previous: Graph Representations</a> |
+  <a href="#" data-page="tutorial5">Next: Shortest Path Algorithms</a>
+</nav>

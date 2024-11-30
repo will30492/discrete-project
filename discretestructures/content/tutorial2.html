@@ -1,0 +1,130 @@
+<!-- content/tutorial2.html -->
+<h2>Types of Graphs</h2>
+
+<p>
+  Graphs can be classified based on their characteristics. Understanding these
+  types helps in choosing the right algorithms and models for different
+  problems.
+</p>
+
+<h3>Undirected vs. Directed Graphs</h3>
+
+<h4>Undirected Graphs</h4>
+
+<p>
+  In an <strong>undirected graph</strong>, edges have no orientation. The edge
+  between vertices \( u \) and \( v \) is represented as \( \{u, v\} \), and it
+  implies a two-way relationship.
+</p>
+
+<img src="assets/undirected_graph.png" alt="Undirected Graph" />
+
+<h4>Directed Graphs (Digraphs)</h4>
+
+<p>
+  In a <strong>directed graph</strong>, edges have a direction, represented as
+  ordered pairs \( (u, v) \). This indicates a one-way relationship from \( u \)
+  to \( v \).
+</p>
+
+<img src="assets/directed_graph.png" alt="Directed Graph" />
+
+<h3>Weighted Graphs</h3>
+
+<p>
+  A <strong>weighted graph</strong> assigns a numerical value, or weight, to
+  each edge. Weights can represent distances, costs, capacities, or other
+  quantities.
+</p>
+
+<img src="assets/weighted_graph.png" alt="Weighted Graph" />
+
+<h3>Special Graphs</h3>
+
+<h4>Bipartite Graphs</h4>
+
+<p>
+  A <strong>bipartite graph</strong> has its vertices divided into two disjoint
+  sets \( U \) and \( V \) such that every edge connects a vertex in \( U \) to
+  one in \( V \). There are no edges between vertices within the same set.
+</p>
+
+<img src="assets/bipartite_graph.png" alt="Bipartite Graph" />
+
+<h4>Complete Graphs</h4>
+
+<p>
+  A <strong>complete graph</strong>, denoted as \( K_n \), is an undirected
+  graph where every pair of distinct vertices is connected by a unique edge.
+</p>
+
+<img src="assets/complete_graph.png" alt="Complete Graph" />
+
+<h3>Interactive Exploration</h3>
+
+<p>Use the buttons below to create different types of graphs.</p>
+
+<div id="graph-controls">
+  <button id="create-undirected">Create Undirected Graph</button>
+  <button id="create-directed">Create Directed Graph</button>
+  <button id="create-weighted">Create Weighted Graph</button>
+</div>
+
+<canvas id="graphCanvas" width="600" height="400"></canvas>
+
+<script>
+  const canvas = document.getElementById("graphCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  document.getElementById("create-undirected").addEventListener("click", () => {
+    clearCanvas();
+    const graph = new Graph(false);
+    const v1 = new Vertex(200, 200);
+    const v2 = new Vertex(400, 200);
+    graph.addVertex(v1);
+    graph.addVertex(v2);
+    graph.addEdge(v1, v2);
+    graph.draw(ctx);
+  });
+
+  document.getElementById("create-directed").addEventListener("click", () => {
+    clearCanvas();
+    const graph = new Graph(true);
+    const v1 = new Vertex(200, 200);
+    const v2 = new Vertex(400, 200);
+    graph.addVertex(v1);
+    graph.addVertex(v2);
+    graph.addEdge(v1, v2);
+    graph.draw(ctx);
+  });
+
+  document.getElementById("create-weighted").addEventListener("click", () => {
+    clearCanvas();
+    const graph = new Graph(false, true);
+    const v1 = new Vertex(200, 200);
+    const v2 = new Vertex(400, 200);
+    graph.addVertex(v1);
+    graph.addVertex(v2);
+    graph.addEdge(v1, v2, 10);
+    graph.draw(ctx);
+  });
+</script>
+
+<h3>Practice Exercise</h3>
+
+<p>For each graph type:</p>
+
+<ul>
+  <li>Identify the direction of edges (if any).</li>
+  <li>Determine if the graph is connected.</li>
+  <li>Calculate the degree of each vertex.</li>
+</ul>
+
+<nav>
+  <a href="#" data-page="tutorial1">Previous: Introduction to Graphs</a> |
+  <a href="#" data-page="tutorial3">Next: Graph Representations</a>
+</nav>

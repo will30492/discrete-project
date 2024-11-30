@@ -1,0 +1,39 @@
+<!-- content/game.html -->
+<h2>Interactive Graph Theory Game</h2>
+<p>
+  Apply what you've learned by interacting with the graph directly. Build
+  graphs, find paths, and explore algorithms in action.
+</p>
+<div id="game-container">
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <div id="game-controls">
+    <button id="add-vertex">Add Vertex</button>
+    <button id="add-edge">Add Edge</button>
+    <button id="find-eulerian">Find Eulerian Path</button>
+    <button id="find-hamiltonian">Find Hamiltonian Cycle</button>
+    <button id="reset-game">Reset</button>
+  </div>
+  <div id="feedback"></div>
+</div>
+
+<script>
+  // Game initialization code from script.js
+  function initializeGame() {
+    const addVertexBtn = document.getElementById("add-vertex");
+    const addEdgeBtn = document.getElementById("add-edge");
+    const resetGameBtn = document.getElementById("reset-game");
+    const findEulerianBtn = document.getElementById("find-eulerian");
+    const findHamiltonianBtn = document.getElementById("find-hamiltonian");
+    const feedbackDiv = document.getElementById("feedback");
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let graph = new Graph();
+    let addingEdge = false;
+    let selectedVertex = null;
+
+    // Rest of the game code...
+    // (Copy the game-related code from script.js and adapt it as needed)
+  }
+  initializeGame();
+</script>

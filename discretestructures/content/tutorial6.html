@@ -1,0 +1,78 @@
+<!-- content/tutorial6.html -->
+<h2>Eulerian and Hamiltonian Paths</h2>
+
+<p>
+  Eulerian and Hamiltonian paths are specific types of paths in a graph,
+  significant in various applications.
+</p>
+
+<h3>Eulerian Paths and Circuits</h3>
+
+<p>
+  An <strong>Eulerian path</strong> is a path that visits every edge exactly
+  once. An <strong>Eulerian circuit</strong> is an Eulerian path that starts and
+  ends at the same vertex.
+</p>
+
+<h4>Conditions for Existence</h4>
+
+<ul>
+  <li>
+    An undirected graph has an Eulerian circuit if and only if all vertices have
+    even degrees.
+  </li>
+  <li>
+    An undirected graph has an Eulerian path (but not a circuit) if exactly two
+    vertices have odd degrees.
+  </li>
+</ul>
+
+<h3>Hamiltonian Paths and Cycles</h3>
+
+<p>
+  A <strong>Hamiltonian path</strong> is a path that visits every vertex exactly
+  once. A <strong>Hamiltonian cycle</strong> is a Hamiltonian path that starts
+  and ends at the same vertex.
+</p>
+
+<p>
+  Determining whether such paths exist is generally NP-complete, making it
+  computationally challenging.
+</p>
+
+<h3>Interactive Exploration</h3>
+
+<p>Build a graph and use the tools to find Eulerian and Hamiltonian paths.</p>
+
+<div id="game-container">
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <div id="game-controls">
+    <button id="add-vertex">Add Vertex</button>
+    <button id="add-edge">Add Edge</button>
+    <button id="find-eulerian">Find Eulerian Path</button>
+    <button id="find-hamiltonian">Find Hamiltonian Cycle</button>
+    <button id="reset-game">Reset</button>
+  </div>
+  <div id="feedback"></div>
+</div>
+
+<script>
+  initializeGame(); // Use the game initialization code from your interactive game
+</script>
+
+<h3>Practice Exercise</h3>
+
+<p>Determine if the following graph has:</p>
+
+<ul>
+  <li>An Eulerian circuit.</li>
+  <li>An Eulerian path but not a circuit.</li>
+  <li>A Hamiltonian cycle.</li>
+</ul>
+
+<img src="assets/practice_graph.png" alt="Eulerian and Hamiltonian Graph" />
+
+<nav>
+  <a href="#" data-page="tutorial5">Previous: Shortest Path Algorithms</a> |
+  <a href="#" data-page="tutorial7">Next: Graph Coloring</a>
+</nav>

@@ -1,0 +1,148 @@
+<!-- content/tutorial1.html -->
+<h2>Introduction to Graphs</h2>
+
+<p>
+  Welcome to the world of graph theory! In this tutorial, we'll explore the
+  basics of graphs, including key definitions and fundamental concepts.
+</p>
+
+<h3>What is a Graph?</h3>
+
+<p>
+  A <strong>graph</strong> is a mathematical structure used to model pairwise
+  relations between objects. It consists of two sets:
+</p>
+
+<ul>
+  <li>
+    <strong>Vertices (or Nodes)</strong>: The fundamental units or points.
+  </li>
+  <li>
+    <strong>Edges (or Links)</strong>: The connections between the vertices.
+  </li>
+</ul>
+
+<p>
+  Formally, a graph is denoted as \( G = (V, E) \), where \( V \) is a set of
+  vertices, and \( E \) is a set of edges connecting pairs of vertices.
+</p>
+
+<h3>Key Definitions</h3>
+
+<ul>
+  <li>
+    <strong>Adjacent Vertices</strong>: Two vertices are adjacent if they are
+    connected by an edge.
+  </li>
+  <li>
+    <strong>Degree of a Vertex</strong>: The number of edges incident to a
+    vertex.
+  </li>
+  <li>
+    <strong>Path</strong>: A sequence of edges that connects a sequence of
+    vertices.
+  </li>
+  <li>
+    <strong>Cycle</strong>: A path that starts and ends at the same vertex
+    without repeating any edges or vertices (except the starting/ending vertex).
+  </li>
+</ul>
+
+<h3>Example Graph</h3>
+
+<p>Consider the following graph:</p>
+
+<img src="assets/graph_example1.png" alt="Example Graph" />
+
+<p>In this graph:</p>
+
+<ul>
+  <li>Vertices: \( V = \{a, b, c, d, e\} \)</li>
+  <li>Edges: \( E = \{\{a, b\}, \{a, d\}, \{b, c\}, \{c, d\}, \{a, e\}\} \)</li>
+  <li>The degree of vertex \( a \) is 3.</li>
+  <li>Vertices \( b \) and \( c \) are adjacent.</li>
+  <li>Vertex \( e \) is an isolated connection, only linked to \( a \).</li>
+</ul>
+
+<h3>Applications of Graphs</h3>
+
+<p>Graphs are used in various fields:</p>
+
+<ul>
+  <li>
+    <strong>Computer Networks</strong>: Modeling connections between computers.
+  </li>
+  <li>
+    <strong>Social Networks</strong>: Representing relationships between people.
+  </li>
+  <li><strong>Transportation</strong>: Mapping routes and networks.</li>
+  <li>
+    <strong>Biology</strong>: Analyzing neural networks or ecological
+    relationships.
+  </li>
+  <li>
+    <strong
+      ><a href="https://youtu.be/LFKZLXVO-Dg?t=174" target="_blank"
+        >Even Sudoku!</a
+      ></strong
+    >
+  </li>
+</ul>
+
+<h3>Interactive Example</h3>
+
+<p>
+  Let's visualize a simple graph. Click the button below to create and display
+  it.
+</p>
+
+<button id="create-graph">Create Graph</button>
+<canvas id="exampleCanvas" width="600" height="400"></canvas>
+
+<script>
+  document.getElementById("create-graph").addEventListener("click", () => {
+    const canvas = document.getElementById("exampleCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Create vertices
+    const vertexA = new Vertex(150, 200);
+    const vertexB = new Vertex(300, 100);
+    const vertexC = new Vertex(450, 200);
+    const vertexD = new Vertex(300, 300);
+
+    // Create graph and add vertices
+    const graph = new Graph();
+    graph.addVertex(vertexA);
+    graph.addVertex(vertexB);
+    graph.addVertex(vertexC);
+    graph.addVertex(vertexD);
+
+    // Add edges
+    graph.addEdge(vertexA, vertexB);
+    graph.addEdge(vertexB, vertexC);
+    graph.addEdge(vertexC, vertexD);
+    graph.addEdge(vertexD, vertexA);
+    graph.addEdge(vertexA, vertexC);
+
+    // Draw graph
+    graph.draw(ctx);
+  });
+</script>
+
+<h3>Practice Exercise</h3>
+
+<p>Try to identify:</p>
+
+<ul>
+  <li>The degree of each vertex in the graph.</li>
+  <li>All possible paths from vertex A to vertex D.</li>
+  <li>If there are any cycles in the graph.</li>
+</ul>
+
+<nav>
+  <a href="#" data-page="tutorial">Back to Tutorials</a> |
+  <a href="#" data-page="tutorial2">Next: Types of Graphs</a>
+</nav>
