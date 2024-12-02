@@ -99,39 +99,6 @@
 <button id="create-graph">Create Graph</button>
 <canvas id="exampleCanvas" width="600" height="400"></canvas>
 
-<script>
-  document.getElementById("create-graph").addEventListener("click", () => {
-    const canvas = document.getElementById("exampleCanvas");
-    const ctx = canvas.getContext("2d");
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Create vertices
-    const vertexA = new Vertex(150, 200);
-    const vertexB = new Vertex(300, 100);
-    const vertexC = new Vertex(450, 200);
-    const vertexD = new Vertex(300, 300);
-
-    // Create graph and add vertices
-    const graph = new Graph();
-    graph.addVertex(vertexA);
-    graph.addVertex(vertexB);
-    graph.addVertex(vertexC);
-    graph.addVertex(vertexD);
-
-    // Add edges
-    graph.addEdge(vertexA, vertexB);
-    graph.addEdge(vertexB, vertexC);
-    graph.addEdge(vertexC, vertexD);
-    graph.addEdge(vertexD, vertexA);
-    graph.addEdge(vertexA, vertexC);
-
-    // Draw graph
-    graph.draw(ctx);
-  });
-</script>
-
 <h3>Practice Exercise</h3>
 
 <p>Try to identify:</p>

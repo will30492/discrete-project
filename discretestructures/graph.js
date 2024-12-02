@@ -1,5 +1,3 @@
-// graph.js
-
 class Vertex {
     constructor(x, y, label = '') {
         this.x = x;
@@ -68,12 +66,12 @@ class Graph {
                 ctx.strokeStyle = '#3498db';
                 ctx.stroke();
 
-                // Draw arrowhead for directed edges
+                // Draw arrowhead for directed edges NOT WORKING FOR SOME REASON FIX LATER
                 if (this.directed) {
                     this.drawArrowhead(ctx, vertex, neighbor);
                 }
 
-                // Display weights for weighted graphs
+                // Display weights for weighted graphs 
                 if (this.weighted) {
                     const midX = (vertex.x + neighbor.x) / 2;
                     const midY = (vertex.y + neighbor.y) / 2;
@@ -110,7 +108,7 @@ class Graph {
         ctx.stroke();
     }
 
-    // Breadth-First Search
+    // Breadth-First Search https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/
     bfs(startVertex, visitCallback) {
         const visited = new Set();
         const queue = [startVertex];
@@ -129,7 +127,7 @@ class Graph {
         }
     }
 
-    // Depth-First Search
+    // Depth-First Search https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/
     dfs(startVertex, visitCallback) {
         const visited = new Set();
 
@@ -147,7 +145,7 @@ class Graph {
         dfsRecursive(startVertex);
     }
 
-    // Dijkstra's Algorithm
+    // Dijkstra's Algorithm https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/
     dijkstra(startVertex) {
         const distances = new Map();
         const previous = new Map();
@@ -182,7 +180,7 @@ class Graph {
         return { distances, previous };
     }
 
-    // Find Eulerian Path using Hierholzer's Algorithm
+    // Find Eulerian Path using Hierholzer's Algorithm SOURCE: https://www.geeksforgeeks.org/hierholzers-algorithm-directed-graph/
     findEulerianPath() {
         // Check if the graph has an Eulerian path
         const oddVertices = this.vertices.filter(v => v.edges.length % 2 !== 0);
@@ -225,7 +223,7 @@ class Graph {
         return path.reverse();
     }
 
-    // Find Hamiltonian Cycle using Backtracking
+    // Find Hamiltonian Cycle using Backtracking SOURCE: www.geeksforgeeks.org/hamiltonian-cycle/.
     findHamiltonianCycle() {
         const path = [];
         const visited = new Set();
@@ -268,5 +266,5 @@ class Graph {
         return null; // No Hamiltonian Cycle exists
     }
 
-    // Additional methods can be added here if needed
+
 }

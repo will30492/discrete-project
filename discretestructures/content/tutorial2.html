@@ -1,4 +1,3 @@
-<!-- content/tutorial2.html -->
 <h2>Types of Graphs</h2>
 
 <p>
@@ -71,48 +70,6 @@
 </div>
 
 <canvas id="graphCanvas" width="600" height="400"></canvas>
-
-<script>
-  const canvas = document.getElementById("graphCanvas");
-  const ctx = canvas.getContext("2d");
-
-  function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
-  document.getElementById("create-undirected").addEventListener("click", () => {
-    clearCanvas();
-    const graph = new Graph(false);
-    const v1 = new Vertex(200, 200);
-    const v2 = new Vertex(400, 200);
-    graph.addVertex(v1);
-    graph.addVertex(v2);
-    graph.addEdge(v1, v2);
-    graph.draw(ctx);
-  });
-
-  document.getElementById("create-directed").addEventListener("click", () => {
-    clearCanvas();
-    const graph = new Graph(true);
-    const v1 = new Vertex(200, 200);
-    const v2 = new Vertex(400, 200);
-    graph.addVertex(v1);
-    graph.addVertex(v2);
-    graph.addEdge(v1, v2);
-    graph.draw(ctx);
-  });
-
-  document.getElementById("create-weighted").addEventListener("click", () => {
-    clearCanvas();
-    const graph = new Graph(false, true);
-    const v1 = new Vertex(200, 200);
-    const v2 = new Vertex(400, 200);
-    graph.addVertex(v1);
-    graph.addVertex(v2);
-    graph.addEdge(v1, v2, 10);
-    graph.draw(ctx);
-  });
-</script>
 
 <h3>Practice Exercise</h3>
 

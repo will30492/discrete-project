@@ -1,0 +1,4 @@
+pics:
+https://www.google.com/url?sa=i&url=http%3A%2F%2Fwww.analytictech.com%2Fnetworks%2Fgraphtheory.htm&psig=AOvVaw2CMitWBmYUUbGy39W_6ORy&ust=1733070560149000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOC6g4G_hIoDFQAAAAAdAAAAABAE
+https://www.google.com/url?sa=i&url=https%3A%2F%2Fhyperskill.org%2Flearn%2Fstep%2F5645&psig=AOvVaw04OrE1jJzSjZACT2IWODib&ust=1733071820202000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCPDd-uPBhIoDFQAAAAAdAAAAABAE
+https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Weighted_graph

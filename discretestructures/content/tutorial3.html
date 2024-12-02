@@ -1,4 +1,3 @@
-<!-- content/tutorial3.html -->
 <h2>Graph Representations</h2>
 
 <p>
@@ -82,64 +81,6 @@
 <button id="visualize-representation">Visualize</button>
 
 <div id="representation-output"></div>
-
-<script>
-  document
-    .getElementById("visualize-representation")
-    .addEventListener("click", () => {
-      const representation = document.getElementById(
-        "representation-select"
-      ).value;
-      const outputDiv = document.getElementById("representation-output");
-      outputDiv.innerHTML = ""; // Clear previous output
-
-      // Create a sample graph
-      const graph = new Graph(false);
-      const vA = new Vertex("A");
-      const vB = new Vertex("B");
-      const vC = new Vertex("C");
-      graph.addVertex(vA);
-      graph.addVertex(vB);
-      graph.addVertex(vC);
-      graph.addEdge(vA, vB);
-      graph.addEdge(vB, vC);
-
-      if (representation === "adjacency-matrix") {
-        const matrix = graph.getAdjacencyMatrix();
-        outputDiv.innerHTML =
-          "<h4>Adjacency Matrix</h4>" + matrixToHTML(matrix);
-      } else if (representation === "adjacency-list") {
-        const list = graph.getAdjacencyList();
-        outputDiv.innerHTML = "<h4>Adjacency List</h4>" + listToHTML(list);
-      } else if (representation === "incidence-matrix") {
-        const matrix = graph.getIncidenceMatrix();
-        outputDiv.innerHTML =
-          "<h4>Incidence Matrix</h4>" + matrixToHTML(matrix);
-      }
-    });
-
-  function matrixToHTML(matrix) {
-    let html = "<table>";
-    for (let row of matrix) {
-      html += "<tr>";
-      for (let cell of row) {
-        html += `<td>${cell}</td>`;
-      }
-      html += "</tr>";
-    }
-    html += "</table>";
-    return html;
-  }
-
-  function listToHTML(list) {
-    let html = "<ul>";
-    for (let [vertex, neighbors] of Object.entries(list)) {
-      html += `<li>${vertex}: [${neighbors.join(", ")}]</li>`;
-    }
-    html += "</ul>";
-    return html;
-  }
-</script>
 
 <h3>Practice Exercise</h3>
 

@@ -1,8 +1,7 @@
-// script.js
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('nav a');
     const contentDiv = document.getElementById('content');
-
+    // Credit to geekforgeeks for guides on how to do parts of this.
     // Function to load content
     function loadContent(page) {
         fetch(`content/${page}.html`)
@@ -107,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             } else {
-                // Optionally, select a vertex or perform other actions
+                
             }
         });
 
@@ -222,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initialize each tutorial
+    // Initializing each tut
 
     // Tutorial 1: Introduction to Graphs
     function initializeTutorial1() {
@@ -341,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Functions to generate representations
+            // Functions to generate representations GEEKSFORGEEKS
             function getAdjacencyMatrix(graph) {
                 const size = graph.vertices.length;
                 const matrix = Array.from({ length: size }, () => Array(size).fill(0));
@@ -420,130 +419,107 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Tutorial 4: Graph Traversals
     function initializeTutorial4() {
         // BFS
-        if (document.getElementById('start-bfs')) {
-            document.getElementById('start-bfs').addEventListener('click', () => {
-                const canvas = document.getElementById('bfsCanvas');
-                const ctx = canvas.getContext('2d');
-
-                // Initialize graph
-                const graph = createTraversalGraph();
-
-                // Draw graph
-                graph.draw(ctx);
-
-                // BFS Visualization
-                const visited = new Set();
-                const queue = [];
-                queue.push(graph.vertices[0]);
-                visited.add(graph.vertices[0]);
-
-                function bfsStep() {
-                    if (queue.length > 0) {
-                        const vertex = queue.shift();
-
-                        // Highlight current vertex
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        graph.draw(ctx);
-                        vertex.draw(ctx, '#2ecc71'); // Green color
-
-                        for (let edge of vertex.edges) {
-                            if (!visited.has(edge.vertex)) {
-                                visited.add(edge.vertex);
-                                queue.push(edge.vertex);
-                            }
-                        }
-
-                        setTimeout(bfsStep, 1000);
-                    } else {
-                        // Traversal complete
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        graph.draw(ctx);
-                    }
-                }
-
-                bfsStep();
+        const bfsButton = document.getElementById('start-bfs');
+        if (bfsButton) {
+          bfsButton.addEventListener('click', () => {
+            const canvas = document.getElementById('bfsCanvas');
+            const ctx = canvas.getContext('2d');
+      
+            // Initialize graph
+            const graph = createTraversalGraph();
+      
+            // Draw graph
+            graph.draw(ctx);
+      
+            // BFS Visualization
+            let index = 0;
+            const bfsOrder = [];
+            graph.bfs(graph.vertices[0], (vertex) => {
+              bfsOrder.push(vertex);
             });
+      
+            function bfsAnimate() {
+              if (index < bfsOrder.length) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                graph.draw(ctx);
+                bfsOrder[index].draw(ctx, '#2ecc71'); // Highlight current vertex
+                index++;
+                setTimeout(bfsAnimate, 1000);
+              } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                graph.draw(ctx);
+              }
+            }
+      
+            bfsAnimate();
+          });
         }
-
+      
         // DFS
-        if (document.getElementById('start-dfs')) {
-            document.getElementById('start-dfs').addEventListener('click', () => {
-                const canvas = document.getElementById('dfsCanvas');
-                const ctx = canvas.getContext('2d');
-
-                // Initialize graph
-                const graph = createTraversalGraph();
-
-                // Draw graph
-                graph.draw(ctx);
-
-                // DFS Visualization
-                const visited = new Set();
-                const stack = [];
-                stack.push(graph.vertices[0]);
-
-                function dfsStep() {
-                    if (stack.length > 0) {
-                        const vertex = stack.pop();
-
-                        if (!visited.has(vertex)) {
-                            visited.add(vertex);
-
-                            // Highlight current vertex
-                            ctx.clearRect(0, 0, canvas.width, canvas.height);
-                            graph.draw(ctx);
-                            vertex.draw(ctx, '#e67e22'); // Orange color
-
-                            for (let edge of vertex.edges) {
-                                if (!visited.has(edge.vertex)) {
-                                    stack.push(edge.vertex);
-                                }
-                            }
-
-                            setTimeout(dfsStep, 1000);
-                        } else {
-                            dfsStep();
-                        }
-                    } else {
-                        // Traversal complete
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        graph.draw(ctx);
-                    }
-                }
-
-                dfsStep();
+        const dfsButton = document.getElementById('start-dfs');
+        if (dfsButton) {
+          dfsButton.addEventListener('click', () => {
+            const canvas = document.getElementById('dfsCanvas');
+            const ctx = canvas.getContext('2d');
+      
+            // Initialize graph
+            const graph = createTraversalGraph();
+      
+            // Draw graph
+            graph.draw(ctx);
+      
+            // DFS Visualization
+            let index = 0;
+            const dfsOrder = [];
+            graph.dfs(graph.vertices[0], (vertex) => {
+              dfsOrder.push(vertex);
             });
+      
+            function dfsAnimate() {
+              if (index < dfsOrder.length) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                graph.draw(ctx);
+                dfsOrder[index].draw(ctx, '#e67e22'); // Highlight current vertex
+                index++;
+                setTimeout(dfsAnimate, 1000);
+              } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                graph.draw(ctx);
+              }
+            }
+      
+            dfsAnimate();
+          });
         }
-
+      
         function createTraversalGraph() {
-            const graph = new Graph();
-            const vA = new Vertex(300, 100, 'A');
-            const vB = new Vertex(150, 200, 'B');
-            const vC = new Vertex(450, 200, 'C');
-            const vD = new Vertex(300, 300, 'D');
-            const vE = new Vertex(150, 400, 'E');
-            const vF = new Vertex(450, 400, 'F');
-
-            graph.addVertex(vA);
-            graph.addVertex(vB);
-            graph.addVertex(vC);
-            graph.addVertex(vD);
-            graph.addVertex(vE);
-            graph.addVertex(vF);
-
-            graph.addEdge(vA, vB);
-            graph.addEdge(vA, vC);
-            graph.addEdge(vB, vD);
-            graph.addEdge(vC, vD);
-            graph.addEdge(vD, vE);
-            graph.addEdge(vD, vF);
-
-            return graph;
+          const graph = new Graph();
+          const vA = new Vertex(300, 100, 'A');
+          const vB = new Vertex(150, 200, 'B');
+          const vC = new Vertex(450, 200, 'C');
+          const vD = new Vertex(300, 300, 'D');
+          const vE = new Vertex(150, 400, 'E');
+          const vF = new Vertex(450, 400, 'F');
+      
+          graph.addVertex(vA);
+          graph.addVertex(vB);
+          graph.addVertex(vC);
+          graph.addVertex(vD);
+          graph.addVertex(vE);
+          graph.addVertex(vF);
+      
+          graph.addEdge(vA, vB);
+          graph.addEdge(vA, vC);
+          graph.addEdge(vB, vD);
+          graph.addEdge(vC, vD);
+          graph.addEdge(vD, vE);
+          graph.addEdge(vD, vF);
+      
+          return graph;
         }
-    }
+      }
 
     // Tutorial 5: Shortest Path Algorithms
     function initializeTutorial5() {
@@ -594,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Tutorial 6: Eulerian and Hamiltonian Paths
+    // Tutorial 6: Eulerian and Hamiltonian Paths GEEKSFORGEEKS
     function initializeTutorial6() {
         if (document.getElementById('find-eulerian-tutorial')) {
             document.getElementById('find-eulerian-tutorial').addEventListener('click', () => {
@@ -712,6 +688,74 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
+// Initialize Tutorial 7: Graph Coloring
+function initializeTutorial7() {
+    const canvas = document.getElementById('coloringCanvas');
+    const ctx = canvas.getContext('2d');
+    const colorVertexBtn = document.getElementById('color-vertex');
+    const colorSelect = document.getElementById('color-select');
+
+    if (canvas && colorVertexBtn && colorSelect) {
+        // Initialize graph
+        const graph = new Graph();
+        const vA = new Vertex(300, 100, 'A');
+        const vB = new Vertex(200, 200, 'B');
+        const vC = new Vertex(400, 200, 'C');
+        const vD = new Vertex(300, 300, 'D');
+
+        graph.addVertex(vA);
+        graph.addVertex(vB);
+        graph.addVertex(vC);
+        graph.addVertex(vD);
+
+        graph.addEdge(vA, vB);
+        graph.addEdge(vA, vC);
+        graph.addEdge(vB, vC);
+        graph.addEdge(vB, vD);
+        graph.addEdge(vC, vD);
+
+        // Draw graph
+        drawGraph();
+
+        let selectedVertex = null;
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const pos = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+            selectedVertex = graph.getVertexAt(pos);
+            if (selectedVertex) {
+                // Highlight selected vertex
+                drawGraph();
+                selectedVertex.draw(ctx, '#f1c40f'); // Highlight color
+            }
+        });
+
+        colorVertexBtn.addEventListener('click', () => {
+            if (selectedVertex) {
+                const color = colorSelect.value;
+                selectedVertex.color = color;
+                drawGraph();
+                selectedVertex = null;
+            } else {
+                alert('Please select a vertex to color.');
+            }
+        });
+
+        function drawGraph() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw edges
+            graph.draw(ctx);
+            // Draw vertices with their assigned colors
+            graph.vertices.forEach(vertex => {
+                vertex.draw(ctx, vertex.color || '#e74c3c');
+            });
+        }
+    }
+}
 
 // Initialize Quiz
 function initializeQuiz() {

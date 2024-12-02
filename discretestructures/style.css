@@ -1,6 +1,3 @@
-/* style.css */
-
-/* General Styles */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -134,3 +131,22 @@ img {
 nav a[data-page] {
     cursor: pointer;
 }
+
+.interactive-section {
+    margin-bottom: 40px;
+  }
+  
+  .interactive-section button {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .interactive-section canvas {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
